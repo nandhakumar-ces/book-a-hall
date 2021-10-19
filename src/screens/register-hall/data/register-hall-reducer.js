@@ -4,21 +4,21 @@ const initialState = {
   error: false,
 };
 
-const loginReducer = (state = initialState, action) => {
+const hallRegistrationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "REQUESTED_LOGIN":
+    case "REQUESTED_HALL_REGISTRATION":
       return {
         data: {},
         loading: true,
         error: false,
       };
-    case "LOGIN_SUCESSS":
+    case "REGISTRATION_HALL_SUCESSS":
       return {
         data: action,
         loading: false,
         error: false,
       };
-    case "LOGIN_FAILURE":
+    case "REGISTRATION_HALL_FAILURE":
       return {
         data: {},
         loading: false,
@@ -29,4 +29,4 @@ const loginReducer = (state = initialState, action) => {
   }
 };
 
-export default loginReducer;
+export default hallRegistrationReducer;

@@ -1,4 +1,5 @@
 import User from "../models/user-model.js";
+import Hall from "../models/hall-model.js";
 
 export const login = async (req, res) => {
   const { username } = req.body;
@@ -15,4 +16,10 @@ export const register = async (req, res) => {
   } catch (error) {
     res.json({ message: error.message });
   }
+};
+
+export const dashboard = async (req, res) => {
+  const { hallOwner } = req.body;
+  const user = await Hall.find({ hallOwner: hallOwner });
+  res.json(user);
 };

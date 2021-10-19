@@ -1,14 +1,14 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import userRoutes from "./routes/user.js";
+import router from "./routes/rootRoute.js";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: "true" }));
 app.use(cors());
-app.use("/user", userRoutes);
+app.use("/user", router);
 
 const CONNECTION_URL =
   "mongodb+srv://nandhakumar-ces:mlpzaq@cluster0.ja0us.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";

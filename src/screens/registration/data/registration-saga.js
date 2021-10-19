@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { put, call, takeLatest } from "redux-saga/effects";
 import * as actions from "./registration-action";
-import { fetchRegistration } from "../../../api/user-api";
+import { fetchRegistration } from "../../../api/authn-api";
 
 function* saveRegistrationData(action) {
   try {
@@ -10,8 +10,6 @@ function* saveRegistrationData(action) {
     if (response === "Success") {
       yield put(actions.registrationSucess(true));
     }
-
-    console.log(response, "api response");
   } catch (error) {
     console.log(error);
   }

@@ -4,16 +4,36 @@ button {
 
 .sign-in {
   width: 100%;
-  padding: 2rem;
+  padding: 10px;
   background-color: #3a66c9;
   color: #fff;
-  border-radius: 30px;
+  border-radius: 8px;
+  border: 1px solid #3a66c9;
 }
 .sign-up {
   width: 100%;
-  padding: 2rem;
+  padding: 10px;
   background-color: #00a400;
   color: #fff;
-  border-radius: 30px;
-  margin-top: 5rem;
+  border-radius: 8px;
+  margin-top: 15px;
+  border: 1px solid #00a400;
+}
+.book-hall {
+  width: 25%;
+  padding: 10px;
+  background-color: #3a66c9;
+  color: #fff;
+  border-radius: 8px;
+  margin-top: 25px;
+  border: 1px solid #3a66c9;
+}
+.register-hall {
+  width: 25%;
+  padding: 10px;
+  background-color: #3a66c9;
+  color: #fff;
+  border-radius: 8px;
+  margin-top: 25px;
+  border: 1px solid #3a66c9;
 }

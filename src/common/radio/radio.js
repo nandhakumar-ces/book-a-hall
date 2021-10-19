@@ -2,7 +2,6 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import "./radio.scss";
 
 function useRadio(data, title) {
   const [selectedData, setSelectedData] = useState();
@@ -17,11 +16,12 @@ function useRadio(data, title) {
         <input
           type="radio"
           name={item.name}
+          className="radio-input-area"
           id={item.id}
           value={item.id}
           onChange={handleChange}
         />
-        <span>{item.title}</span>
+        <span className="radio-input-title">{item.title}</span>
       </label>
     );
   };

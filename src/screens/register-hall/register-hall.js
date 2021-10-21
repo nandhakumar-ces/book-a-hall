@@ -140,8 +140,8 @@ function RegisterHallScreen() {
             <span>*Required field(s)</span>
             <Button
               text="Submit"
-              type="register-hall"
-              onPress={handleSubmit(registerHall)}
+              class="register-hall"
+              onClick={handleSubmit(registerHall)}
             />
           </div>
         </div>

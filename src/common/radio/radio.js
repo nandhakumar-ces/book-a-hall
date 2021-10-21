@@ -1,41 +1,48 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/jsx-key */
-/* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
-function useRadio(data, title) {
-  const [selectedData, setSelectedData] = useState();
-
-  const handleChange = (event) => {
-    setSelectedData(event.target.value);
-  };
-
+function RadioField({ label, register, rules, data }) {
+  console.log(register, "reg");
+  console.log(rules, "rules");
   const ListItem = ({ item }) => {
     return (
       <label className="radio-inline">
         <input
           type="radio"
-          name={item.name}
           className="radio-input-area"
-          id={item.id}
-          value={item.id}
-          onChange={handleChange}
+          value={item.value}
+          {...register(label, { ...rules })}
         />
         <span className="radio-input-title">{item.title}</span>
       </label>
     );
   };
 
-  return [
+  return (
     <div className="radio-container">
-      <h3>{title}</h3>
+      <h3>{label}</h3>
       <div className="radio-group">
         {data &&
           data.map((item) => <ListItem key={item.id.toString()} item={item} />)}
       </div>
-    </div>,
-    selectedData,
-  ];
+    </div>
+  );
 }
 
-export default useRadio;
+RadioField.propTypes = {
+  label: PropTypes.string,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+      title: PropTypes.string,
+      value: PropTypes.string,
+      checked: PropTypes.bool,
+    })
+  ),
+  item: PropTypes.object,
+  rules: PropTypes.object,
+  register: PropTypes.func,
+};
+
+export default RadioField;

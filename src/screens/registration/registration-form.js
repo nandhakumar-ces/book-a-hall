@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +10,7 @@ import * as action from "./data/registration-action";
 import Button from "../../common/button/button";
 import useDate from "../../common/date/date";
 import InputField from "../../common/input/input";
+import RadioField from "../../common/radio/radio";
 import PropTypes from "prop-types";
 import "./registration.scss";
 import "../../common/radio/radio.scss";
@@ -25,6 +25,36 @@ function RegistrationForm({ modalOpen, handleModalOpen }) {
     setValue,
     clearErrors,
   } = useForm();
+
+  const genderData = [
+    {
+      id: 1,
+      name: "gender",
+      title: "Male",
+      value: "male",
+    },
+    {
+      id: 2,
+      name: "gender",
+      title: "Female",
+      value: "female",
+    },
+  ];
+
+  const registerTypeData = [
+    {
+      id: 3,
+      name: "usertype",
+      title: "User  ",
+      value: "user",
+    },
+    {
+      id: 3,
+      name: "usertype",
+      title: "Owner",
+      value: "owner",
+    },
+  ];
 
   const setAge = (age) => {
     setValue("age", age);
@@ -126,31 +156,14 @@ function RegistrationForm({ modalOpen, handleModalOpen }) {
                   rules={{ maxLength: 20, required: true, min: 3 }}
                 />
               </div>
-
               <div className="radio-container">
-                <h3>Gender</h3>
-                <div className="radio-group">
-                  <label className="radio-inline">
-                    <input
-                      {...register("gender")}
-                      type="radio"
-                      name="gender"
-                      className="radio-input-area"
-                      value="male"
-                    />
-                    <span className="radio-input-title">Male</span>
-                  </label>
-                  <label className="radio-inline">
-                    <input
-                      {...register("gender")}
-                      type="radio"
-                      name="gender"
-                      className="radio-input-area"
-                      value="female"
-                    />
-                    <span className="radio-input-title">Female</span>
-                  </label>
-                </div>
+                <RadioField
+                  label="gender"
+                  register={register}
+                  data={genderData}
+                  errors={errors}
+                  rules={{ required: false }}
+                />
               </div>
               <div className="input-row">
                 <div className="calendar-input">{calendar}</div>
@@ -181,34 +194,18 @@ function RegistrationForm({ modalOpen, handleModalOpen }) {
                 </div>
               </div>
               <div className="radio-container">
-                <h3>Register as</h3>
-                <div className="radio-group">
-                  <label className="radio-inline">
-                    <input
-                      {...register("type")}
-                      type="radio"
-                      name="type"
-                      className="radio-input-area"
-                      value="user"
-                    />
-                    <span className="radio-input-title">User</span>
-                  </label>
-                  <label className="radio-inline">
-                    <input
-                      {...register("type")}
-                      type="radio"
-                      name="type"
-                      className="radio-input-area"
-                      value="owner"
-                    />
-                    <span className="radio-input-title">Owner</span>
-                  </label>
-                </div>
+                <RadioField
+                  label="userType"
+                  register={register}
+                  data={registerTypeData}
+                  errors={errors}
+                  rules={{ required: false }}
+                />
               </div>
               <Button
                 text="Register"
-                type="sign-up"
-                onPress={handleSubmit(registerUser)}
+                class="sign-up"
+                onClick={handleSubmit(registerUser)}
               />
             </div>
           </form>

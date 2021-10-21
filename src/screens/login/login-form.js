@@ -56,8 +56,8 @@ function LoginForm() {
         <div className="sign-in-btn">
           <Button
             text="Sign In"
-            type="sign-in"
-            onPress={handleSubmit(verifyLogin)}
+            class="sign-in"
+            onClick={handleSubmit(verifyLogin)}
           />
         </div>
         <p>

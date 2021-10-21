@@ -1,5 +1,8 @@
-import { put, call, takeEvery } from "redux-saga/effects";
-import { fetchHallListData } from "../../../api/hall-api";
+import { put, call, takeLatest } from "redux-saga/effects";
+import {
+  fetchHallListData,
+  fetchHallListFilteredData,
+} from "../../../api/hall-api";
 
 function* fetchHallList(action) {
   try {
@@ -13,8 +16,21 @@ function* fetchHallList(action) {
   }
 }
 
+function* fetchHallFilteredList(action) {
+  try {
+    const response = yield call(fetchHallListFilteredData, action);
+    yield put({
+      type: "GET_HALL_LIST_FILTERED_DATA",
+      payload: response,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 function* actionWatcherHallBook() {
-  yield takeEvery("GET_HALL_LIST_DATA", fetchHallList);
+  yield takeLatest("GET_HALL_LIST_DATA", fetchHallList);
+  yield takeLatest("GET_HALL_LIST_FILTERED_DATA", fetchHallFilteredList);
 }
 
 export default actionWatcherHallBook;

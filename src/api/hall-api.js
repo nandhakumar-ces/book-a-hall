@@ -19,3 +19,13 @@ export const fetchHallListData = async () => {
     console.log(err, "this error");
   }
 };
+
+export const fetchHallListFilteredData = async (action) => {
+  const params = action.payload;
+  try {
+    const response = await fetchPost(config.HALL_LIST_FILTER_DATA, params);
+    return response;
+  } catch (err) {
+    console.log(err, "this error");
+  }
+};

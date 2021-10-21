@@ -16,3 +16,16 @@ export const hallList = async (req, res) => {
   const hall = await Hall.find({});
   res.json(hall);
 };
+
+export const hallListFilter = async (req, res) => {
+  const { hallCategory, hallType } = req.body;
+  const hall = await Hall.find({
+    hallCategory: hallCategory,
+    hallType: hallType,
+  });
+  try {
+    res.json(hall);
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+};

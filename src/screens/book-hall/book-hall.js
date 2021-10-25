@@ -84,6 +84,7 @@ function BookHallScreen() {
   ];
 
   const HallList = ({ item }) => {
+    console.log(item, "hall item");
     return (
       <>
         <tr>
@@ -93,7 +94,13 @@ function BookHallScreen() {
           <td>{item.capacity}</td>
           <td>&#x20B9;{item.hallPrice}</td>
           <td>{item.status}</td>
-          <td>Book Now</td>
+          <td>
+            <Button
+              text="BOOK NOW"
+              class="book-hall-btn"
+              onClick={() => console.log("clicked")}
+            />
+          </td>
         </tr>
       </>
     );
@@ -119,18 +126,16 @@ function BookHallScreen() {
   };
 
   const showFilteredData = (data) => {
-    let hallCategory = "";
     let sortby = "";
     let halltype = "";
-    if (data.HallType !== null) halltype = data.halltype;
+    if (data.hallType !== null) halltype = data.hallType;
     if (data.sortby !== null) sortby = data.sortby;
     const params = {
-      hallCategory: hallCategory,
+      hallCategory: data.eventType,
       sortby: sortby,
       hallType: halltype,
       capacity: data.capacity,
     };
-    console.log(params);
     dispatch(action.getHallListFilteredData(params));
   };
 
@@ -151,7 +156,8 @@ function BookHallScreen() {
           <div className="advance-filter-row">
             <div className="col-20 col-span">
               <SelectField
-                label="Event Type"
+                label="eventType"
+                text="Event Type"
                 register={register}
                 data={eventType}
                 errors={errors}
@@ -161,6 +167,7 @@ function BookHallScreen() {
             <div className="radio-container col-30 col-span">
               <RadioField
                 label="sortby"
+                text="Sort by"
                 register={register}
                 control={control}
                 data={sortbyData}
@@ -181,7 +188,8 @@ function BookHallScreen() {
             </div>
             <div className="radio-container col-20 col-span">
               <RadioField
-                label="HallType"
+                label="hallType"
+                text="Hall Type"
                 register={register}
                 data={hallType}
                 errors={errors}
@@ -212,13 +220,15 @@ function BookHallScreen() {
           </tr>
         </thead>
         <tbody>
-          {data !== undefined ? (
+          {data && data.length > 0 ? (
             data.map((item) => {
               return <HallList key={item._id} item={item} />;
             })
           ) : (
             <tr>
-              <td>No data available</td>
+              <td colSpan="7" style={{ textAlign: "center" }}>
+                No data available
+              </td>
             </tr>
           )}
         </tbody>

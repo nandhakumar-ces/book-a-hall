@@ -25,7 +25,7 @@ function RegisterHallScreen() {
   };
 
   const registerHall = (data) => {
-    const owenerNumber = sessionStorage.getItem("mobileNumber");
+    const owenerID = sessionStorage.getItem("userID");
     let customCategory = "";
     if (data.customCategory !== undefined)
       customCategory = data?.customCategory;
@@ -36,7 +36,7 @@ function RegisterHallScreen() {
       capacity: data.capacity,
       hallCategory: data.hallCategory,
       customCategory: customCategory,
-      hallOwner: owenerNumber,
+      hallOwner: owenerID,
     };
     console.log(params);
     dispatch(action.fetchRegistration(params, history));

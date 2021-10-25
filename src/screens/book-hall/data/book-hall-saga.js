@@ -7,6 +7,7 @@ import {
 function* fetchHallList(action) {
   try {
     const response = yield call(fetchHallListData, action);
+    console.log(response);
     yield put({
       type: "GET_HALL_DATA_SUCESS",
       payload: response,
@@ -18,9 +19,11 @@ function* fetchHallList(action) {
 
 function* fetchHallFilteredList(action) {
   try {
+    console.log(action, "book actiona");
     const response = yield call(fetchHallListFilteredData, action);
+    console.log(response, "book response");
     yield put({
-      type: "GET_HALL_LIST_FILTERED_DATA",
+      type: "GET_HALL_DATA_SUCESS",
       payload: response,
     });
   } catch (error) {

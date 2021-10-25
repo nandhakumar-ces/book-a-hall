@@ -22,6 +22,7 @@ export const fetchHallListData = async () => {
 
 export const fetchHallListFilteredData = async (action) => {
   const params = action.payload;
+  console.log(params);
   try {
     const response = await fetchPost(config.HALL_LIST_FILTER_DATA, params);
     return response;

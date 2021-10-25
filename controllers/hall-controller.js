@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Hall from "../models/hall-model.js";
 
 export const registerHall = async (req, res) => {
@@ -12,17 +13,25 @@ export const registerHall = async (req, res) => {
 };
 
 export const hallList = async (req, res) => {
-  console.log("check point 1");
   const hall = await Hall.find({});
   res.json(hall);
 };
 
 export const hallListFilter = async (req, res) => {
-  const { hallCategory, hallType } = req.body;
-  const hall = await Hall.find({
+  const { hallCategory, hallType, capacity, sortby } = req.body;
+  const data = {
     hallCategory: hallCategory,
-    hallType: hallType,
-  });
+  };
+  if (hallType != "") data["halltype"] = hallType;
+  if (capacity != "") data["capacity"] = capacity;
+  let hall;
+  if (sortby != "") hall = await Hall.find(data);
+  else {
+    if (sortby == "lowtohigh")
+      hall = await Hall.find(data).sort({ hallPrice: "asc" });
+    else hall = await Hall.find(data).sort({ hallPrice: -1 });
+  }
+
   try {
     res.json(hall);
   } catch (error) {

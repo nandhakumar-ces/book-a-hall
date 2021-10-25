@@ -1,9 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-function RadioField({ label, register, rules, data }) {
-  console.log(register, "reg");
-  console.log(rules, "rules");
+function RadioField({ label, register, rules, data, text }) {
   const ListItem = ({ item }) => {
     return (
       <label className="radio-inline">
@@ -20,7 +18,7 @@ function RadioField({ label, register, rules, data }) {
 
   return (
     <div className="radio-container">
-      <h3>{label}</h3>
+      <h3>{text}</h3>
       <div className="radio-group">
         {data &&
           data.map((item) => <ListItem key={item.id.toString()} item={item} />)}
@@ -31,6 +29,7 @@ function RadioField({ label, register, rules, data }) {
 
 RadioField.propTypes = {
   label: PropTypes.string,
+  text: PropTypes.string,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,

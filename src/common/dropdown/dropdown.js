@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-function SelectField({ label, register, data }) {
+function SelectField({ label, register, data, text }) {
   const ListItem = ({ item }) => {
     return (
       <>
@@ -12,7 +12,7 @@ function SelectField({ label, register, data }) {
 
   return (
     <>
-      <h3>{label}</h3>
+      <h3>{text}</h3>
       <select className="input-area" {...register(label)}>
         {data &&
           data.map((item) => <ListItem key={item.id.toString()} item={item} />)}
@@ -23,6 +23,7 @@ function SelectField({ label, register, data }) {
 
 SelectField.propTypes = {
   label: PropTypes.string,
+  text: PropTypes.string,
   register: PropTypes.func,
   data: PropTypes.arrayOf(
     PropTypes.shape({

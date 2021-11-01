@@ -13,8 +13,9 @@ function BookHistoryScreen() {
   const { data = {} } = useSelector(
     (state) => state.bookRequestReducer.bookRequest
   );
+  const [bookHistoryData, setBookHistoryData] = useState([]);
   const [userDetails] = useState(authProvider());
-  const today = new Date();
+  const today = new Date().toDateString();
 
   const Badge = ({ type }) => {
     switch (type) {
@@ -73,6 +74,15 @@ function BookHistoryScreen() {
     dispatch(action.getBookRequestData(params));
   }, []);
 
+  useEffect(() => {
+    if (Object.keys(data).length) {
+      const result = data.filter((filter) => {
+        if (moment(filter.bookings.bookDate).isBefore(today)) return filter;
+      });
+      setBookHistoryData(result);
+    }
+  }, [data]);
+
   return (
     <div className="dashboard-hall-container">
       <div className="dashboard-hall-content">
@@ -81,19 +91,14 @@ function BookHistoryScreen() {
             <div className="dashboard-hall-header">
               Booking History | All Users
             </div>
-            {data && data.length > 0 ? (
+            {bookHistoryData.length ? (
               <div>
                 <ul style={{ marginLeft: "-20px" }}>
-                  {data
-                    .filter((filter) => {
-                      if (moment(filter.bookings.bookDate).isBefore(today))
-                        return filter;
-                    })
-                    .map((item) => {
-                      return (
-                        <HallListOwner key={item.bookings._id} item={item} />
-                      );
-                    })}
+                  {bookHistoryData.map((item) => {
+                    return (
+                      <HallListOwner key={item.bookings._id} item={item} />
+                    );
+                  })}
                 </ul>
               </div>
             ) : (
@@ -105,19 +110,12 @@ function BookHistoryScreen() {
         ) : (
           <>
             <div className="dashboard-hall-header">My Booking History</div>
-            {data && data.length > 0 ? (
+            {bookHistoryData.length ? (
               <div>
                 <ul style={{ marginLeft: "-20px" }}>
-                  {data
-                    .filter((filter) => {
-                      if (moment(filter.bookings.bookDate).isBefore(today))
-                        return filter;
-                    })
-                    .map((item) => {
-                      return (
-                        <HallListUser key={item.bookings._id} item={item} />
-                      );
-                    })}
+                  {bookHistoryData.map((item) => {
+                    return <HallListUser key={item.bookings._id} item={item} />;
+                  })}
                 </ul>
               </div>
             ) : (

@@ -25,7 +25,7 @@ const BookRequestScreen = () => {
   const [userDetails] = useState(authProvider());
   const [toastMessage, setToastMessage] = useState("Sucess");
   const toastId = useRef(null);
-  const today = new Date();
+  const today = new Date().toDateString();
 
   const Badge = ({ type }) => {
     switch (type) {

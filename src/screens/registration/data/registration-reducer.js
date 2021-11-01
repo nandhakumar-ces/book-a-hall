@@ -7,7 +7,6 @@ const initialState = {
 };
 
 const registrationReducer = (state = initialState, action) => {
-  console.log(action);
   switch (action.type) {
     case "FETCH_REGISTRATION":
       return {

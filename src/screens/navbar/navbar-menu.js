@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Redirect, NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,14 +10,18 @@ import {
   faSignOutAlt,
   faBookReader,
 } from "@fortawesome/free-solid-svg-icons";
+import * as action from "../login/data/login-action";
+import { useDispatch } from "react-redux";
+import authProvider from "../../common/utils";
 import "./navbar.scss";
 
 function NavMenuScreen() {
+  const dispatch = useDispatch();
   const isLogin = sessionStorage.getItem("isLoggedIn");
-  const userType = sessionStorage.getItem("userType");
   if (isLogin === null) {
     return <Redirect to="/login" />;
   } else {
+    const [userDetails] = useState(authProvider());
     return (
       <>
         <div className="wrapper">
@@ -32,7 +36,7 @@ function NavMenuScreen() {
                   Dashboard
                 </NavLink>
               </li>
-              {userType === "user" ? (
+              {userDetails.userType === "user" ? (
                 <>
                   <li>
                     <NavLink to="/book-a-hall" activeClassName="selected">
@@ -81,6 +85,7 @@ function NavMenuScreen() {
                   to="/"
                   onClick={() => {
                     sessionStorage.clear();
+                    dispatch(action.requestLogOut());
                     <Redirect to="/login" />;
                   }}
                 >

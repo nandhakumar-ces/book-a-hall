@@ -9,6 +9,14 @@
   scrollbar-width: none; /* Firefox */
 }
 
+h5 {
+  font-size: 25px;
+  color: #455f79;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
 .book-hall-container {
   display: flex;
   align-items: center;
@@ -59,41 +67,36 @@
   margin-left: 12px;
 }
 
-.form-submit-btn {
-  margin: 0px 35px 10px;
-}
-
-table {
+.book-hall-table {
   margin: 25px;
   border-right-color: #ffffff;
   border-collapse: collapse;
+  th,
+  td {
+    padding: 16px 16px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #3a66c9;
+    color: #fff;
+    width: 10%;
+  }
 }
 
-th,
-td {
-  padding: 16px 16px;
-  text-align: left;
-}
-
-th {
-  background-color: #3a66c9;
-  color: #fff;
-  width: 10%;
-}
-
-thead th:first-child {
+.book-hall-thead th:first-child {
   border-top-left-radius: 10px;
 }
 
-thead th:last-child {
+.book-hall-thead th:last-child {
   border-top-right-radius: 10px;
 }
 
-tbody tr:nth-child(odd) {
+.book-hall-tbody tr:nth-child(odd) {
   background-color: #f8f9fa;
 }
 
-tbody tr:nth-child(even) {
+.book-hall-tbody tr:nth-child(even) {
   background-color: #e9ecef;
 }
 
@@ -117,14 +120,6 @@ tbody tr:nth-child(even) {
   background: none;
 }
 
-.filter-button {
-  margin-right: 3%;
-  color: #fff;
-  background-color: #339af0;
-  border: 1px solid;
-  border-radius: 5px;
-}
-
 .advance-filter-container {
   display: flex;
   flex-direction: column;
@@ -138,4 +133,38 @@ tbody tr:nth-child(even) {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.book-modal-window {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.25);
+  top: 50%;
+  right: 30%;
+  z-index: 10;
+  opacity: 1;
+  transition: all 0.3s;
+  .book-modal-content {
+    width: 30vw;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    background: white;
+  }
+}
+
+.overlay-bg {
+  z-index: 5;
+  position: absolute;
+  width: 85%;
+  height: 100%;
+  top: 0;
+  left: 15%;
+  background: #38343480;
+}
+
+.book-hall-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 15px 5px 8px 0px;
 }

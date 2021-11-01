@@ -1,34 +1,33 @@
 const initialState = {
-  registration: {
+  profile: {
     data: {},
     loading: false,
     error: false,
   },
 };
 
-const registrationReducer = (state = initialState, action) => {
-  console.log(action);
+const profileReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "FETCH_REGISTRATION":
+    case "UPDATE_PROFILE_REQUEST":
       return {
-        registration: {
+        profile: {
           data: {},
           loading: true,
           error: false,
         },
       };
-    case "REGISTRATION_SUCESSS":
+    case "UPDATE_PROFILE_SUCCESS":
       return {
-        registration: {
+        profile: {
           data: action,
           loading: false,
           error: false,
         },
       };
-    case "REGISTRATION_FAILURE":
+    case "UPDATE_PROFILE_FAILURE":
       return {
-        registration: {
-          data: action,
+        profile: {
+          data: {},
           loading: false,
           error: true,
         },
@@ -38,4 +37,4 @@ const registrationReducer = (state = initialState, action) => {
   }
 };
 
-export default registrationReducer;
+export default profileReducer;

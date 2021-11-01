@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
@@ -15,6 +13,7 @@ function InputField({
   name,
   type,
   screen,
+  id,
 }) {
   if (screen === "login") {
     return (
@@ -26,7 +25,6 @@ function InputField({
             className="login-error"
             placeholder={placeholder}
             {...register(label, { ...rules })}
-            autoFocus
           />
         </>
         {errors[label] && errors[label].type === "required" && (
@@ -41,11 +39,11 @@ function InputField({
         {errors[label] && errors[label].type === "required" ? (
           <>
             <input
+              id={id}
               type={type}
               className="input-error"
               placeholder={placeholder}
               {...register(label, { ...rules })}
-              autoFocus
             />
             <FontAwesomeIcon
               icon={faExclamationCircle}
@@ -55,11 +53,12 @@ function InputField({
           </>
         ) : (
           <input
+            id={id}
             type={type}
             className="input-area"
             placeholder={placeholder}
-            {...register(label, { ...rules })}
             autoFocus
+            {...register(label, { ...rules })}
           />
         )}
       </>
@@ -73,6 +72,10 @@ InputField.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
   screen: PropTypes.string,
+  rules: PropTypes.object,
+  register: PropTypes.func,
+  errors: PropTypes.object,
+  id: PropTypes.string,
 };
 
 export default InputField;

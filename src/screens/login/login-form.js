@@ -1,22 +1,51 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import * as action from "./data/login-action";
 import InputField from "../../common/input/input";
 import Button from "../../common/button/button";
 import RegistrationForm from "../registration/registration-form";
+import { toast } from "react-toastify";
+import { userDetails } from "../../constants";
 
 function LoginForm() {
   const dispatch = useDispatch();
   const history = useHistory();
   const [modalOpen, setModalOpen] = useState(false);
+  const toastId = useRef(null);
+
   const {
     handleSubmit,
     formState: { errors },
     register,
   } = useForm();
+
+  const {
+    loading = false,
+    error = false,
+    data = {},
+  } = useSelector((state) => state.loginReducer.login);
+
+  const showLoader = () =>
+    (toastId.current = toast("Verifying, please wait...", {
+      type: toast.TYPE.INFO,
+      autoClose: false,
+    }));
+
+  const showError = () =>
+    toast.update(toastId.current, {
+      render: "Invalid username or password",
+      type: toast.TYPE.ERROR,
+      autoClose: 2000,
+    });
+
+  const showSuccess = () =>
+    toast.update(toastId.current, {
+      render: "Logged in successfully",
+      type: toast.TYPE.SUCCESS,
+      autoClose: 2000,
+    });
 
   const handleModalOpen = () => setModalOpen((previousSate) => !previousSate);
   const verifyLogin = (data) => {
@@ -24,8 +53,33 @@ function LoginForm() {
       username: data.userName,
       password: data.password,
     };
-    dispatch(action.fetchLogin(params, history));
+    dispatch(action.fetchLogin(params));
   };
+
+  useEffect(() => {
+    if (loading) {
+      showLoader();
+    } else {
+      if (error) {
+        setTimeout(() => {
+          showError();
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          showSuccess();
+          if (Object.entries(data).length > 0) {
+            sessionStorage.setItem("isLoggedIn", true);
+            sessionStorage.setItem(
+              userDetails.USERDETAILS,
+              JSON.stringify(data.response)
+            );
+            history.push("/dashboard");
+          }
+        }, 2000);
+      }
+    }
+  }, [loading]);
+
   return (
     <>
       <div className="login-form">
@@ -56,7 +110,7 @@ function LoginForm() {
         <div className="sign-in-btn">
           <Button
             text="Sign In"
-            class="sign-in"
+            className="sign-in"
             onClick={handleSubmit(verifyLogin)}
           />
         </div>

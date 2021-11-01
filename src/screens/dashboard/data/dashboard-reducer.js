@@ -4,6 +4,10 @@ const dashboardReducer = (state = {}, action) => {
       return { ...state, loading: true };
     case "DASHBOARD_DATA_SUCESS":
       return { ...state, loading: true, data: action.payload };
+    case "GET_BOOk_REQUEST_DATA":
+      return { ...state, loading: true };
+    case "BOOK_REQUEST_SUCESS":
+      return { ...state, loading: true, data: action.payload };
     default:
       return state;
   }

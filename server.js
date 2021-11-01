@@ -11,7 +11,9 @@ app.use(cors());
 app.use("/user", router);
 
 const CONNECTION_URL =
-  "mongodb+srv://nandhakumar-ces:mlpzaq@cluster0.ja0us.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+  // "mongodb+srv://nandhakumar-ces:mlpzaq@cluster0.ja0us.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+  "mongodb://localhost:27017";
+
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 5000;
 

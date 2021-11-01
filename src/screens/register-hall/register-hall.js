@@ -1,17 +1,20 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import * as action from "./data/register-hall-action";
 import Button from "../../common/button/button";
 import InputField from "../../common/input/input";
+import authProvider from "../../common/utils";
 import "./register-hall.scss";
 
 function RegisterHallScreen() {
   const dispatch = useDispatch();
   const history = useHistory();
   const [hallCategory, setHallCategory] = useState("birthday");
+  const [userDetails] = useState(authProvider());
+  const toastId = useRef(null);
 
   const {
     handleSubmit,
@@ -19,13 +22,38 @@ function RegisterHallScreen() {
     register,
   } = useForm();
 
+  const {
+    loading = false,
+    error = false,
+    data,
+  } = useSelector((state) => state.hallRegistrationReducer.hallRegister);
+
   const showCustomInput = () => {
     let value = document.getElementById("hallCategory").value;
     setHallCategory(value);
   };
 
+  const showLoader = () =>
+    (toastId.current = toast("Registering hall, please wait...", {
+      type: toast.TYPE.INFO,
+      autoClose: false,
+    }));
+
+  const showError = () =>
+    toast.update(toastId.current, {
+      render: "Request failed, please try again",
+      type: toast.TYPE.ERROR,
+      autoClose: 2000,
+    });
+
+  const showSuccess = () =>
+    toast.update(toastId.current, {
+      render: "Hall registerd successfully",
+      type: toast.TYPE.SUCCESS,
+      autoClose: 2000,
+    });
+
   const registerHall = (data) => {
-    const owenerID = sessionStorage.getItem("userID");
     let customCategory = "";
     if (data.customCategory !== undefined)
       customCategory = data?.customCategory;
@@ -36,11 +64,30 @@ function RegisterHallScreen() {
       capacity: data.capacity,
       hallCategory: data.hallCategory,
       customCategory: customCategory,
-      hallOwner: owenerID,
+      hallOwner: userDetails._id,
     };
-    console.log(params);
-    dispatch(action.fetchRegistration(params, history));
+    dispatch(action.fetchRegistration(params));
   };
+
+  useEffect(() => {
+    if (loading) {
+      showLoader();
+    } else {
+      if (error) {
+        setTimeout(() => {
+          showError();
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          showSuccess();
+          if (Object.entries(data).length > 0) {
+            delete data.type;
+            history.push("/dashboard");
+          }
+        }, 2000);
+      }
+    }
+  }, [loading]);
 
   return (
     <div className="register-hall-container">
@@ -53,7 +100,7 @@ function RegisterHallScreen() {
                 label="hallName"
                 placeholder=""
                 register={register}
-                name="Hall Name"
+                name="Hall Name *"
                 errors={errors}
                 rules={{ maxLength: 20, required: true, min: 3 }}
               />
@@ -63,7 +110,7 @@ function RegisterHallScreen() {
                 label="hallPrice"
                 placeholder=""
                 register={register}
-                name="Estimated Price"
+                name="Estimated Price *"
                 errors={errors}
                 type="number"
                 rules={{ maxLength: 20, required: true, min: 3 }}
@@ -72,7 +119,7 @@ function RegisterHallScreen() {
           </div>
           <div className="row">
             <div className="radio-container col-50">
-              <h3>Hall Type</h3>
+              <h3>Hall Type *</h3>
               <div className="radio-group">
                 <label className="radio-inline">
                   <input
@@ -101,7 +148,7 @@ function RegisterHallScreen() {
                 label="capacity"
                 placeholder=""
                 register={register}
-                name="Capacity"
+                name="Capacity *"
                 errors={errors}
                 type="number"
                 rules={{ maxLength: 20, required: true, min: 3 }}
@@ -110,7 +157,7 @@ function RegisterHallScreen() {
           </div>
           <div className="row">
             <div className="col-50">
-              <h3>Hall Category</h3>
+              <h3>Hall Category *</h3>
               <select
                 id="hallCategory"
                 className="input-area"
@@ -140,7 +187,7 @@ function RegisterHallScreen() {
             <span>*Required field(s)</span>
             <Button
               text="Submit"
-              class="register-hall"
+              className="register-hall"
               onClick={handleSubmit(registerHall)}
             />
           </div>

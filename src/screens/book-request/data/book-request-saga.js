@@ -23,7 +23,7 @@ function* fetchBookRequestData(action) {
 function* updateBookRequest(action) {
   try {
     const response = yield call(updateHallRequest, action);
-    if (response.Status) action.successCallback();
+    if (response.Status) action.bookRequestSuccess();
   } catch (error) {
     console.log(error);
   }
@@ -32,6 +32,7 @@ function* updateBookRequest(action) {
 function* deleteBookRequest(action) {
   try {
     const response = yield call(deleteBookRequestData, action);
+    console.log(response, "rsp");
     if (response.Status) {
       yield put(actions.deleteRequestSuceess());
     } else {

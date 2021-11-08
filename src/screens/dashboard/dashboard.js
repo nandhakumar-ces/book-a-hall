@@ -17,6 +17,7 @@ function DashboardScreen() {
   const [userDetails] = useState(authProvider());
   const dispatch = useDispatch();
   const data = useSelector((state) => state.dashboardReducer.data);
+  const [hallData, setHallData] = useState([]);
 
   const [pendingApproval, setPendingApproval] = useState(0);
   const [rejectedApproval, setRejectedApproval] = useState(0);
@@ -78,7 +79,7 @@ function DashboardScreen() {
 
   useEffect(() => {
     const usertype = userDetails.userType;
-    if (usertype === "user")
+    if (usertype === "user") {
       if (data) {
         const pending = data.filter((filter) => {
           if (filter.bookings.approvalStatus === "Pending") return filter;
@@ -89,18 +90,21 @@ function DashboardScreen() {
         setPendingApproval(pending.length);
         setRejectedApproval(rejected.length);
       }
-  }, data);
+    } else {
+      setHallData(data);
+    }
+  }, [data && data]);
 
   if (userDetails.userType === "owner")
     return (
       <div className="dashboard-hall-container">
         <div className="dashboard-hall-content">
           <div className="dashboard-hall-header">My Hall Details</div>
-          {data && data.length > 0 ? (
+          {hallData && hallData.length ? (
             <>
               <div>
                 <ul>
-                  {data.map((item) => {
+                  {hallData.map((item) => {
                     return <HallList key={item._id} item={item} />;
                   })}
                 </ul>

@@ -19,7 +19,7 @@ export const registerHall = async (req, res) => {
 
 export const hallList = async (req, res) => {
   try {
-    const hall = await Hall.find({});
+    const hall = await Hall.find();
     res.json({
       Status: true,
       Data: hall,
@@ -129,12 +129,18 @@ export const hallRequestUpdate = async (req, res) => {
         : item
     );
 
-    await Hall.findOneAndUpdate(
+    let docs = await Hall.findOneAndUpdate(
       { "bookings._id": _id },
-      { bookings: updateQuery }
+      { bookings: updateQuery },
+      {
+        new: true,
+      }
     );
 
-    res.json({ Status: true });
+    res.json({
+      Status: true,
+      Data: docs,
+    });
   } catch (error) {
     res.json({ Status: false, Message: error.message });
   }
@@ -169,12 +175,16 @@ export const hallRequestDelete = async (req, res) => {
         mongoose.Types.ObjectId(_id).toString()
     );
 
-    await Hall.findOneAndUpdate(
+    let docs = await Hall.findOneAndUpdate(
       { "bookings._id": _id },
-      { bookings: updateQuery }
+      { bookings: updateQuery },
+      {
+        new: true,
+      }
     );
     return res.json({
       Status: true,
+      Data: docs,
     });
   } catch (error) {
     res.json({ message: error.message });

@@ -2,8 +2,8 @@ export const getBookRequestData = (data) => {
   return { type: "GET_BOOk_REQUEST_DATA", payload: data, history };
 };
 
-export const updateBookRequest = (data, successCallback) => {
-  return { type: "UPDATE_BOOK_REQUEST", payload: data, successCallback };
+export const updateBookRequest = (data) => {
+  return { type: "UPDATE_BOOK_REQUEST", payload: data };
 };
 
 export const bookRequestSuccess = () => {

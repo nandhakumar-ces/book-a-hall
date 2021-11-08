@@ -12,5 +12,7 @@ config.UPDATE_HALL_REQUEST = "/hall-request-update";
 config.GET_HALLS_BOOKED = "/hall-booked-date";
 config.DELETE_HALL_REQUEST = "/hall-request-delete";
 config.UPDATE_USER_PROFILE = "/update-user";
+config.ALL_USER = "/all-user";
+config.ALL_HALL = "/all-hall";
 
 export default config;

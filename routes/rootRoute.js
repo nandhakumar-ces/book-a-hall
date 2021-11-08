@@ -15,6 +15,7 @@ import {
   hallBookedData,
   hallRequestDelete,
 } from "../controllers/hall-controller.js";
+import { allUser, allHall } from "../controllers/admin-controller.js";
 import config from "./route-constants.js";
 
 const router = express.Router();
@@ -34,5 +35,7 @@ router.post(config.UPDATE_HALL_REQUEST, hallRequestUpdate);
 router.post(config.GET_HALLS_BOOKED, hallBookedData);
 router.post(config.DELETE_HALL_REQUEST, hallRequestDelete);
 router.post(config.UPDATE_USER_PROFILE, userProfileUpdate);
+router.get(config.ALL_USER, allUser);
+router.get(config.ALL_HALL, allHall);
 
 export default router;

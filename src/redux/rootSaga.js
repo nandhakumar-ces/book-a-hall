@@ -6,6 +6,8 @@ import actionWatcherHallRegister from "../screens/register-hall/data/register-ha
 import actionWatcherHallBook from "../screens/book-hall/data/book-hall-saga";
 import actionWatcherBookRequest from "../screens/book-request/data/book-request-saga";
 import actionWatcherProfile from "../screens/profile/data/profile-saga";
+import actionWatcherAllUser from "../screens/all-user/data/all-user-saga";
+import actionWatcherAllHall from "../screens/all-hall/data/all-hall-saga";
 
 export default function* rootSaga() {
   yield all([
@@ -16,5 +18,7 @@ export default function* rootSaga() {
     actionWatcherHallBook(),
     actionWatcherBookRequest(),
     actionWatcherProfile(),
+    actionWatcherAllUser(),
+    actionWatcherAllHall(),
   ]);
 }

@@ -1,5 +1,5 @@
 export const getDashboardData = (data) => {
-  return { type: "GET_DASHBOARD_DATA", payload: data, history };
+  return { type: "GET_DASHBOARD_DATA", payload: data };
 };
 
 export const dashboardSuccess = () => {

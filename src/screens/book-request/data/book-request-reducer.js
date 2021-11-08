@@ -35,7 +35,7 @@ const bookRequestReducer = (state = initialState, action) => {
     case "DELETE_BOOK_REQUEST":
       return {
         bookRequest: {
-          data: action.payload,
+          data: {},
           loading: true,
           error: false,
         },
@@ -51,7 +51,7 @@ const bookRequestReducer = (state = initialState, action) => {
     case "BOOK_REQUEST_FAILURE":
       return {
         bookRequest: {
-          data: action,
+          data: {},
           loading: false,
           error: true,
         },

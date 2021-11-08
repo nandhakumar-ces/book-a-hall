@@ -9,11 +9,17 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import * as action from "./data/book-request-action";
-import moment from "moment";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import PropTypes from "prop-types";
 import NoData from "../../assets/svg/not-found.svg";
 import authProvider from "../../common/utils";
+import { bookingStatus } from "../../constants";
 import "./book-request.scss";
+
+dayjs.extend(localizedFormat);
+dayjs.extend(isSameOrAfter);
 
 const BookRequestScreen = () => {
   const dispatch = useDispatch();
@@ -26,6 +32,7 @@ const BookRequestScreen = () => {
   const [toastMessage, setToastMessage] = useState("Sucess");
   const toastId = useRef(null);
   const today = new Date().toDateString();
+  const [bookRequestData, setBookRequestData] = useState([]);
 
   const Badge = ({ type }) => {
     switch (type) {
@@ -41,12 +48,12 @@ const BookRequestScreen = () => {
   };
 
   const confirmDelete = (item) => {
-    setToastMessage("Deleted Successfully");
     dispatch(
       action.deleteBookRequest({
         id: item.bookings._id,
       })
     );
+    setToastMessage("Deleted Successfully");
   };
 
   const HallListUser = ({ item }) => {
@@ -54,7 +61,7 @@ const BookRequestScreen = () => {
       <li className="list-content-style">
         <div className="list-hall-name">{item.hallName}</div>
         <div className="list-hall-date">
-          {moment(item.bookings.bookDate).format("ll")}
+          {dayjs(item.bookings.bookDate).format("ll")}
         </div>
         <div className="list-hall-status">
           <Badge type={item.bookings.approvalStatus} />
@@ -87,7 +94,7 @@ const BookRequestScreen = () => {
           {item.bookings.userName}
         </div>
         <div className="list-hall-date">
-          {moment(item.bookings.bookDate).format("ll")}
+          {dayjs(item.bookings.bookDate).format("ll")}
         </div>
         <div className="list-hall-status">
           <Badge type={item.bookings.approvalStatus} />
@@ -102,8 +109,8 @@ const BookRequestScreen = () => {
                   dispatch(
                     action.updateBookRequest({
                       id: item.bookings._id,
-                      type: "Approved",
-                      hallStatus: "Booked",
+                      type: bookingStatus.Approved,
+                      hallStatus: bookingStatus.Booked,
                     })
                   );
                 }}
@@ -120,8 +127,8 @@ const BookRequestScreen = () => {
                   dispatch(
                     action.updateBookRequest({
                       id: item.bookings._id,
-                      type: "Rejected",
-                      hallStatus: "Available",
+                      type: bookingStatus.Rejected,
+                      hallStatus: bookingStatus.Available,
                     })
                   );
                 }}
@@ -175,6 +182,15 @@ const BookRequestScreen = () => {
     }
   }, [loading]);
 
+  useEffect(() => {
+    if (Object.keys(data).length) {
+      const result = data.filter((filter) => {
+        if (dayjs(filter.bookings.bookDate).isSameOrAfter(today)) return filter;
+      });
+      setBookRequestData(result);
+    }
+  }, [data]);
+
   return (
     <div className="dashboard-hall-container">
       <div className="dashboard-hall-content">
@@ -183,19 +199,14 @@ const BookRequestScreen = () => {
             <div className="dashboard-hall-header">
               Approve Requests | All Users
             </div>
-            {data && data.length > 0 ? (
+            {bookRequestData.length ? (
               <div>
                 <ul style={{ marginLeft: "-20px" }}>
-                  {data
-                    .filter((filter) => {
-                      if (moment(filter.bookings.bookDate).isSameOrAfter(today))
-                        return filter;
-                    })
-                    .map((item) => {
-                      return (
-                        <HallListOwner key={item.bookings._id} item={item} />
-                      );
-                    })}
+                  {bookRequestData.map((item) => {
+                    return (
+                      <HallListOwner key={item.bookings._id} item={item} />
+                    );
+                  })}
                 </ul>
               </div>
             ) : (
@@ -207,19 +218,12 @@ const BookRequestScreen = () => {
         ) : (
           <>
             <div className="dashboard-hall-header">My Booking Status</div>
-            {data && data.length > 0 ? (
+            {bookRequestData.length ? (
               <div>
                 <ul style={{ marginLeft: "-20px" }}>
-                  {data
-                    .filter((filter) => {
-                      if (moment(filter.bookings.bookDate).isSameOrAfter(today))
-                        return filter;
-                    })
-                    .map((item) => {
-                      return (
-                        <HallListUser key={item.bookings._id} item={item} />
-                      );
-                    })}
+                  {bookRequestData.map((item) => {
+                    return <HallListUser key={item.bookings._id} item={item} />;
+                  })}
                 </ul>
               </div>
             ) : (

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import Calendar from "react-calendar";
 import PropTypes from "prop-types";
-import moment from "moment";
+import dayjs from "dayjs";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputField from "../../common/input/input";
@@ -136,7 +136,7 @@ function BookHallScreen() {
 
   function tileDisabled({ date, view }) {
     if (view === "month") {
-      return disabledDates.find((dDate) => moment(dDate).isSame(date));
+      return disabledDates.find((dDate) => dayjs(dDate).isSame(dayjs(date)));
     }
   }
 
@@ -149,7 +149,7 @@ function BookHallScreen() {
   }, [data]);
 
   return (
-    <>
+    <div className="book-hall-container">
       <div className="search-box">
         <SearchBar searchHallName={searchHallName} />
         <Button
@@ -259,7 +259,7 @@ function BookHallScreen() {
               <Calendar
                 onChange={onChange}
                 value={value}
-                minDate={moment().toDate()}
+                minDate={dayjs().toDate()}
                 tileDisabled={tileDisabled}
               />
               <div className="book-hall-footer">
@@ -279,7 +279,7 @@ function BookHallScreen() {
           <div className="overlay-bg" />
         </>
       ) : null}
-    </>
+    </div>
   );
 }
 

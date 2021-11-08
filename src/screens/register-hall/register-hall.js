@@ -7,6 +7,8 @@ import * as action from "./data/register-hall-action";
 import Button from "../../common/button/button";
 import InputField from "../../common/input/input";
 import authProvider from "../../common/utils";
+import { hallType } from "../../constants";
+import RadioField from "../../common/radio/radio";
 import "./register-hall.scss";
 
 function RegisterHallScreen() {
@@ -94,18 +96,20 @@ function RegisterHallScreen() {
       <div className="register-hall-header">Register your hall</div>
       <div className="register-hall-content">
         <div className="register-hall-form">
-          <div className="row">
-            <div className="col-50">
+          <div className="input-row">
+            <div>
               <InputField
                 label="hallName"
                 placeholder=""
                 register={register}
                 name="Hall Name *"
                 errors={errors}
-                rules={{ maxLength: 20, required: true, min: 3 }}
+                rules={{
+                  required: "Hall name is required",
+                }}
               />
             </div>
-            <div className="col-50 col-span">
+            <div className="col-span">
               <InputField
                 label="hallPrice"
                 placeholder=""
@@ -113,37 +117,24 @@ function RegisterHallScreen() {
                 name="Estimated Price *"
                 errors={errors}
                 type="number"
-                rules={{ maxLength: 20, required: true, min: 3 }}
+                rules={{
+                  required: "Price is required",
+                }}
               />
             </div>
           </div>
-          <div className="row">
-            <div className="radio-container col-50">
-              <h3>Hall Type *</h3>
-              <div className="radio-group">
-                <label className="radio-inline">
-                  <input
-                    {...register("halltype")}
-                    type="radio"
-                    name="halltype"
-                    className="radio-input-area"
-                    value="ac"
-                  />
-                  <span className="radio-input-title">AC</span>
-                </label>
-                <label className="radio-inline">
-                  <input
-                    {...register("halltype")}
-                    type="radio"
-                    name="halltype"
-                    className="radio-input-area"
-                    value="non-ac"
-                  />
-                  <span className="radio-input-title">Non-AC</span>
-                </label>
-              </div>
+          <div className="input-row">
+            <div className="radio-container">
+              <RadioField
+                label="halltype"
+                text="Hall Type *"
+                register={register}
+                data={hallType}
+                errors={errors}
+                rules={{ required: true }}
+              />
             </div>
-            <div className="col-50 col-span">
+            <div className="col-span">
               <InputField
                 label="capacity"
                 placeholder=""
@@ -151,12 +142,14 @@ function RegisterHallScreen() {
                 name="Capacity *"
                 errors={errors}
                 type="number"
-                rules={{ maxLength: 20, required: true, min: 3 }}
+                rules={{
+                  required: "Capacity is required",
+                }}
               />
             </div>
           </div>
-          <div className="row">
-            <div className="col-50">
+          <div className="input-row">
+            <div>
               <h3>Hall Category *</h3>
               <select
                 id="hallCategory"
@@ -171,14 +164,14 @@ function RegisterHallScreen() {
               </select>
             </div>
             {hallCategory === "custom" ? (
-              <div className="col-50 col-span">
+              <div className="col-span">
                 <InputField
                   label="customCategory"
                   placeholder=""
                   register={register}
                   name="New Category"
                   errors={errors}
-                  rules={{ maxLength: 20, required: true, min: 3 }}
+                  rules={{ required: "Custom category is required" }}
                 />
               </div>
             ) : null}

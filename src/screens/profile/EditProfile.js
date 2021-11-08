@@ -15,8 +15,11 @@ import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import { genderData } from "../../constants";
 import authProvider from "../../common/utils";
-import moment from "moment";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import * as User from "../../constants";
+
+dayjs.extend(localizedFormat);
 
 function EditProfileScreen({ modalOpen, handleModalOpen }) {
   const dispatch = useDispatch();
@@ -45,7 +48,7 @@ function EditProfileScreen({ modalOpen, handleModalOpen }) {
     "date",
     "",
     setAge,
-    moment(userDetails.dateOfBirth).format("YYYY-MM-DD")
+    dayjs(userDetails.dateOfBirth).format("YYYY-MM-DD")
   );
 
   const showLoader = () =>
@@ -138,22 +141,22 @@ function EditProfileScreen({ modalOpen, handleModalOpen }) {
                 </a>
               </div>
               <div className="input-row">
-                <div className="col-50">
+                <div>
                   <InputField
                     label="firstName"
                     name="First Name *"
                     register={register}
                     errors={errors}
-                    rules={{ required: true }}
+                    rules={{ required: "First name is required" }}
                   />
                 </div>
-                <div className="col-50 col-span">
+                <div className="col-span">
                   <InputField
                     label="lastName"
                     name="Last Name *"
                     register={register}
                     errors={errors}
-                    rules={{ required: true }}
+                    rules={{ required: "Last name is required" }}
                   />
                 </div>
               </div>
@@ -165,7 +168,7 @@ function EditProfileScreen({ modalOpen, handleModalOpen }) {
                   register={register}
                   type="password"
                   errors={errors}
-                  rules={{ required: true }}
+                  rules={{ required: "Password is required" }}
                 />
               </div>
               <div style={{ marginTop: "10px" }}>
@@ -183,7 +186,7 @@ function EditProfileScreen({ modalOpen, handleModalOpen }) {
               </div>
               <div className="input-row">
                 <div className="calendar-input">{calendar}</div>
-                <div className="col-50 col-span">
+                <div className="col-span">
                   <h3 className="input-label">Age</h3>
                   {errors?.age?.type === "required" ? (
                     <>

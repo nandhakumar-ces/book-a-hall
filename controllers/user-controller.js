@@ -1,34 +1,25 @@
 import User from "../models/user-model.js";
 import { Hall } from "../models/hall-model.js";
+import { apiParams } from "../src/constants/index.js";
 
 export const login = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, type } = req.body;
+  const data = {};
+  data["password"] = password;
+  if (type === apiParams.PHONENUMBER) data["mobileNumber"] = username;
+  else data["eMail"] = username;
+
   try {
-    User.findOne(
-      { mobileNumber: username, password: password },
-      function (err, user) {
-        if (err) {
-          User.findOne(
-            { eMail: username, password: password },
-            function (err, user) {
-              if (err) {
-                res.json({ Status: false });
-              } else {
-                return res.json({
-                  Status: true,
-                  Data: user,
-                });
-              }
-            }
-          );
-        } else {
-          return res.json({
-            Status: true,
-            Data: user,
-          });
-        }
+    User.findOne(data, function (err, user) {
+      if (err) {
+        res.json({ Status: false });
+      } else {
+        return res.json({
+          Status: true,
+          Data: user,
+        });
       }
-    );
+    });
   } catch (error) {
     res.json({ Status: false, Message: error.message });
   }

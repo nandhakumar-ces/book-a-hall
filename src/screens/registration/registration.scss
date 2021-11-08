@@ -44,9 +44,9 @@ h4 {
 }
 
 .input-row {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  width: 100%;
   margin-bottom: 10px;
 }
 

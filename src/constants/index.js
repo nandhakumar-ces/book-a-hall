@@ -2,6 +2,19 @@ export const userDetails = {
   USERDETAILS: "USERDETAILS",
 };
 
+export const apiParams = {
+  EMAIL: "EMAIL",
+  PHONENUMBER: "PHONENUMBER",
+};
+
+export const bookingStatus = {
+  Available: "Available",
+  Approved: "Approved",
+  Rejected: "Rejected",
+  Selected: "Selected",
+  Booked: "Booked",
+};
+
 export const sortbyData = [
   {
     id: 1,
@@ -88,3 +101,31 @@ export const registerTypeData = [
     value: "owner",
   },
 ];
+
+export const userRoles = {
+  admin: "admin",
+  user: "user",
+  owner: "owner",
+};
+
+export const allUsers = {
+  all: [userRoles.admin, userRoles.user, userRoles.owner],
+};
+
+export const authRoutes = {
+  login: "/login",
+  dashboard: "/dashboard",
+  bookhall: "/book-a-hall",
+  registerhall: "/register-a-hall",
+  bookhistory: "/booking-history",
+  bookstatus: "/booking-status",
+  profile: "/profile",
+  unauthorized: "/unauthorized",
+  alluser: "/all-user",
+  allhall: "/all-hall",
+};
+
+export const nonAuthRoutes = {
+  login: "/",
+  notfound: "/not-found",
+};

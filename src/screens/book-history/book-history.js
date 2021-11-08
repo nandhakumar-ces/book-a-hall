@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import * as action from "../book-request/data/book-request-action";
 import PropTypes from "prop-types";
 import NoData from "../../assets/svg/not-found.svg";
 import authProvider from "../../common/utils";
+
+dayjs.extend(localizedFormat);
 
 function BookHistoryScreen() {
   const dispatch = useDispatch();
@@ -35,7 +38,7 @@ function BookHistoryScreen() {
       <li className="list-content-style">
         <div className="list-hall-name">{item.hallName}</div>
         <div className="list-hall-date">
-          {moment(item.bookings.bookDate).format("ll")}
+          {dayjs(item.bookings.bookDate).format("ll")}
         </div>
         <div className="list-hall-status">
           <Badge type={item.bookings.approvalStatus} />
@@ -57,7 +60,7 @@ function BookHistoryScreen() {
           {item.bookings.userName}
         </div>
         <div className="list-hall-date">
-          {moment(item.bookings.bookDate).format("ll")}
+          {dayjs(item.bookings.bookDate).format("ll")}
         </div>
         <div className="list-hall-status">
           <Badge type={item.bookings.approvalStatus} />
@@ -77,7 +80,7 @@ function BookHistoryScreen() {
   useEffect(() => {
     if (Object.keys(data).length) {
       const result = data.filter((filter) => {
-        if (moment(filter.bookings.bookDate).isBefore(today)) return filter;
+        if (dayjs(filter.bookings.bookDate).isBefore(today)) return filter;
       });
       setBookHistoryData(result);
     }

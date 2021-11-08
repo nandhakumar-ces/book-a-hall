@@ -9,19 +9,20 @@ import {
   faUserAlt,
   faSignOutAlt,
   faBookReader,
+  faUsers,
+  faHotel,
 } from "@fortawesome/free-solid-svg-icons";
 import * as action from "../login/data/login-action";
 import { useDispatch } from "react-redux";
 import authProvider from "../../common/utils";
+import PropTypes from "prop-types";
 import "./navbar.scss";
 
-function NavMenuScreen() {
+function NavMenuScreen({ isLoggedIn }) {
   const dispatch = useDispatch();
-  const isLogin = sessionStorage.getItem("isLoggedIn");
-  if (isLogin === null) {
-    return <Redirect to="/login" />;
-  } else {
-    const [userDetails] = useState(authProvider());
+
+  const [userDetails] = useState(authProvider());
+  if (isLoggedIn)
     return (
       <>
         <div className="wrapper">
@@ -30,55 +31,89 @@ function NavMenuScreen() {
               <FontAwesomeIcon icon={faBookReader} size={"2x"} color="#fff" />
             </div>
             <ul className="sidebar-nav">
-              <li>
-                <NavLink to="/dashboard" activeClassName="selected">
-                  <FontAwesomeIcon icon={faHome} color="#fff" />
-                  Dashboard
-                </NavLink>
-              </li>
-              {userDetails.userType === "user" ? (
+              {userDetails.userType === "admin" ? (
                 <>
                   <li>
-                    <NavLink to="/book-a-hall" activeClassName="selected">
-                      <FontAwesomeIcon icon={faCalendarCheck} color="#fff" />
-                      Book a hall
+                    <NavLink to="/all-user" activeClassName="selected">
+                      <FontAwesomeIcon icon={faUsers} color="#fff" />
+                      All Users
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/booking-status" activeClassName="selected">
-                      <FontAwesomeIcon icon={faInfoCircle} color="#fff" />
-                      Booking Status
+                    <NavLink to="/all-hall" activeClassName="selected">
+                      <FontAwesomeIcon icon={faHotel} color="#fff" />
+                      All Halls
                     </NavLink>
                   </li>
                 </>
               ) : (
                 <>
                   <li>
-                    <NavLink to="/register-a-hall" activeClassName="selected">
-                      <FontAwesomeIcon icon={faCalendarCheck} color="#fff" />
-                      Register a hall
+                    <NavLink to="/dashboard" activeClassName="selected">
+                      <FontAwesomeIcon icon={faHome} color="#fff" />
+                      Dashboard
+                    </NavLink>
+                  </li>
+                  {userDetails.userType === "user" ? (
+                    <>
+                      <li>
+                        <NavLink to="/book-a-hall" activeClassName="selected">
+                          <FontAwesomeIcon
+                            icon={faCalendarCheck}
+                            color="#fff"
+                          />
+                          Book a hall
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          to="/booking-status"
+                          activeClassName="selected"
+                        >
+                          <FontAwesomeIcon icon={faInfoCircle} color="#fff" />
+                          Booking Status
+                        </NavLink>
+                      </li>
+                    </>
+                  ) : (
+                    <>
+                      <li>
+                        <NavLink
+                          to="/register-a-hall"
+                          activeClassName="selected"
+                        >
+                          <FontAwesomeIcon
+                            icon={faCalendarCheck}
+                            color="#fff"
+                          />
+                          Register a hall
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          to="/booking-status"
+                          activeClassName="selected"
+                        >
+                          <FontAwesomeIcon icon={faInfoCircle} color="#fff" />
+                          Booking Requests
+                        </NavLink>
+                      </li>
+                    </>
+                  )}
+                  <li>
+                    <NavLink to="/booking-history" activeClassName="selected">
+                      <FontAwesomeIcon icon={faHistory} color="#fff" />
+                      Booking History
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/booking-status" activeClassName="selected">
-                      <FontAwesomeIcon icon={faInfoCircle} color="#fff" />
-                      Booking Requests
+                    <NavLink to="/profile" activeClassName="selected">
+                      <FontAwesomeIcon icon={faUserAlt} color="#fff" />
+                      Profile
                     </NavLink>
                   </li>
                 </>
               )}
-              <li>
-                <NavLink to="/booking-history" activeClassName="selected">
-                  <FontAwesomeIcon icon={faHistory} color="#fff" />
-                  Booking History
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/profile" activeClassName="selected">
-                  <FontAwesomeIcon icon={faUserAlt} color="#fff" />
-                  Profile
-                </NavLink>
-              </li>
               <li>
                 <div className="sidebar-item-divider"> </div>
                 <NavLink
@@ -98,7 +133,11 @@ function NavMenuScreen() {
         </div>
       </>
     );
-  }
+  else return null;
 }
+
+NavMenuScreen.propTypes = {
+  isLoggedIn: PropTypes.bool,
+};
 
 export default NavMenuScreen;

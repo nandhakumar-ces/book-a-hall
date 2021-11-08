@@ -1,28 +1,36 @@
 const initialState = {
-  data: {},
-  loading: false,
-  error: false,
+  registration: {
+    data: {},
+    loading: false,
+    error: false,
+  },
 };
 
 const registrationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "REQUESTED_REGISTRATION":
+    case "FETCH_REGISTRATION":
       return {
-        data: {},
-        loading: true,
-        error: false,
+        registration: {
+          data: {},
+          loading: true,
+          error: false,
+        },
       };
     case "REGISTRATION_SUCESSS":
       return {
-        data: action,
-        loading: false,
-        error: false,
+        registration: {
+          data: action,
+          loading: false,
+          error: false,
+        },
       };
     case "REGISTRATION_FAILURE":
       return {
-        data: {},
-        loading: false,
-        error: true,
+        registration: {
+          data: action,
+          loading: false,
+          error: true,
+        },
       };
     default:
       return state;

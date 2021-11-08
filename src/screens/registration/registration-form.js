@@ -1,22 +1,19 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTimes,
-  faExclamationCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { useDispatch, useSelector } from "react-redux";
 import * as action from "./data/registration-action";
 import Button from "../../common/button/button";
 import useDate from "../../common/date/date";
 import InputField from "../../common/input/input";
 import RadioField from "../../common/radio/radio";
+import { toast } from "react-toastify";
 import PropTypes from "prop-types";
+import { registerTypeData, genderData } from "../../constants";
 import "./registration.scss";
 import "../../common/radio/radio.scss";
 import "../../common/input/input.scss";
 
-function RegistrationForm({ modalOpen, handleModalOpen }) {
+function RegistrationForm({ handleModalOpen }) {
   const dispatch = useDispatch();
   const {
     handleSubmit,
@@ -24,37 +21,14 @@ function RegistrationForm({ modalOpen, handleModalOpen }) {
     register,
     setValue,
     clearErrors,
+    reset,
   } = useForm();
-
-  const genderData = [
-    {
-      id: 1,
-      name: "gender",
-      title: "Male",
-      value: "male",
-    },
-    {
-      id: 2,
-      name: "gender",
-      title: "Female",
-      value: "female",
-    },
-  ];
-
-  const registerTypeData = [
-    {
-      id: 3,
-      name: "usertype",
-      title: "User  ",
-      value: "user",
-    },
-    {
-      id: 3,
-      name: "usertype",
-      title: "Owner",
-      value: "owner",
-    },
-  ];
+  const toastId = useRef(null);
+  const {
+    loading = false,
+    error = false,
+    data,
+  } = useSelector((state) => state.registrationReducer.registration);
 
   const setAge = (age) => {
     setValue("age", age);
@@ -63,13 +37,30 @@ function RegistrationForm({ modalOpen, handleModalOpen }) {
 
   const [calendar, calendarValue] = useDate(
     "Date of Birth",
-    true,
-    "",
-    "",
     "date",
     "",
     setAge
   );
+
+  const showLoader = () =>
+    (toastId.current = toast("Registration in progress, please wait...", {
+      type: toast.TYPE.INFO,
+      autoClose: false,
+    }));
+
+  const showError = () =>
+    toast.update(toastId.current, {
+      render: "Email or Phone number already exists, please try again",
+      type: toast.TYPE.ERROR,
+      autoClose: 2000,
+    });
+
+  const showSuccess = () =>
+    toast.update(toastId.current, {
+      render: "Registration completed successfully",
+      type: toast.TYPE.SUCCESS,
+      autoClose: 2000,
+    });
 
   const registerUser = async (data) => {
     const params = {
@@ -81,143 +72,161 @@ function RegistrationForm({ modalOpen, handleModalOpen }) {
       gender: data.gender,
       dateOfBirth: calendarValue,
       age: data.age,
-      userType: data.type,
+      userType: data.userType,
     };
     await dispatch(action.fetchRegistration(params));
-    handleModalOpen();
   };
+
+  const clearRegistrationForm = () => {
+    reset({
+      firstName: "",
+      lastName: "",
+      eMail: "",
+      phoneNumber: "",
+      password: "",
+    });
+  };
+
+  useEffect(() => {
+    if (loading) {
+      showLoader();
+    } else {
+      if (error) {
+        setTimeout(() => {
+          showError();
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          showSuccess();
+          if (Object.entries(data).length > 0) {
+            clearRegistrationForm();
+            handleModalOpen();
+          }
+        }, 2000);
+      }
+    }
+    document.getElementById("userAge").disabled = true;
+  }, [loading]);
 
   return (
     <>
-      {modalOpen === false ? null : (
-        <>
-          <form className="modal-window">
-            <div className="modal-content">
-              <div className="form-header">
-                <h4>Registration</h4>
-                <a onClick={() => handleModalOpen()}>
-                  <FontAwesomeIcon
-                    icon={faTimes}
-                    color="#606771"
-                    className="form-icon"
-                  />
-                </a>
-              </div>
-              <div className="input-row">
-                <div className="col-50">
-                  <InputField
-                    label="firstName"
-                    placeholder="First Name"
-                    register={register}
-                    errors={errors}
-                    rules={{ maxLength: 20, required: true, min: 3 }}
-                  />
-                </div>
-                <div className="col-50 col-span">
-                  <InputField
-                    label="lastName"
-                    placeholder="Last Name"
-                    register={register}
-                    errors={errors}
-                    rules={{ maxLength: 20, required: true, min: 3 }}
-                  />
-                </div>
-              </div>
-
-              <div className="input-row">
-                <div className="col-50">
-                  <InputField
-                    label="eMail"
-                    placeholder="E-Mail"
-                    register={register}
-                    type="email"
-                    errors={errors}
-                    rules={{ maxLength: 20, required: true, min: 3 }}
-                  />
-                </div>
-                <div className="col-50 col-span">
-                  <InputField
-                    label="phoneNumber"
-                    placeholder="Phone Number"
-                    register={register}
-                    type="number"
-                    errors={errors}
-                    rules={{ maxLength: 20, required: true, min: 3 }}
-                  />
-                </div>
-              </div>
-              <div style={{ marginTop: "14px" }}>
-                <InputField
-                  label="password"
-                  placeholder="New Password"
-                  register={register}
-                  type="password"
-                  errors={errors}
-                  rules={{ maxLength: 20, required: true, min: 3 }}
-                />
-              </div>
-              <div className="radio-container">
-                <RadioField
-                  label="gender"
-                  register={register}
-                  data={genderData}
-                  errors={errors}
-                  rules={{ required: false }}
-                />
-              </div>
-              <div className="input-row">
-                <div className="calendar-input">{calendar}</div>
-                <div className="col-50 col-span">
-                  <h3 className="input-label">Age</h3>
-                  {errors?.age?.type === "required" ? (
-                    <>
-                      <input
-                        className="input-error"
-                        {...register("age", {
-                          required: true,
-                          min: 1,
-                          max: 99,
-                        })}
-                      />
-                      <FontAwesomeIcon
-                        icon={faExclamationCircle}
-                        color="#606771"
-                        className="err-icon"
-                      />
-                    </>
-                  ) : (
-                    <input
-                      className="input-area"
-                      {...register("age", { required: true, min: 1, max: 99 })}
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="radio-container">
-                <RadioField
-                  label="userType"
-                  register={register}
-                  data={registerTypeData}
-                  errors={errors}
-                  rules={{ required: false }}
-                />
-              </div>
-              <Button
-                text="Register"
-                class="sign-up"
-                onClick={handleSubmit(registerUser)}
-              />
-            </div>
-          </form>
-          <div className="bg" />
-        </>
-      )}
+      <div className="input-row">
+        <div>
+          <InputField
+            label="firstName"
+            placeholder="First Name"
+            register={register}
+            errors={errors}
+            rules={{
+              required: "First name is required",
+            }}
+          />
+        </div>
+        <div className="col-span">
+          <InputField
+            label="lastName"
+            placeholder="Last Name"
+            register={register}
+            errors={errors}
+            rules={{
+              required: "Last name is required",
+            }}
+          />
+        </div>
+      </div>
+      <div className="input-row">
+        <div>
+          <InputField
+            label="eMail"
+            placeholder="E-Mail"
+            register={register}
+            type="email"
+            errors={errors}
+            rules={{
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Enter valid email",
+              },
+            }}
+          />
+        </div>
+        <div className="col-span">
+          <InputField
+            label="phoneNumber"
+            placeholder="Phone Number"
+            register={register}
+            type="number"
+            errors={errors}
+            rules={{
+              required: "Phone number is required",
+              minLength: 10,
+              maxLength: 10,
+            }}
+          />
+        </div>
+      </div>
+      <div className="input-row" style={{ gridTemplateColumns: "auto" }}>
+        <div>
+          <InputField
+            label="password"
+            placeholder="New Password"
+            register={register}
+            type="password"
+            errors={errors}
+            rules={{
+              required: "Password is required",
+            }}
+          />
+        </div>
+      </div>
+      <div className="input-row">
+        <div className="calendar-input">{calendar}</div>
+        <div className="col-span">
+          <InputField
+            label="age"
+            name="Age"
+            id="userAge"
+            register={register}
+            type="number"
+            errors={errors}
+            rules={{
+              required: "Age is required",
+              min: 1,
+            }}
+          />
+        </div>
+      </div>
+      <div className="row">
+        <RadioField
+          text={"Gender"}
+          label="gender"
+          register={register}
+          data={genderData}
+          errors={errors}
+          rules={{ required: true }}
+        />
+        <div className="col-50 col-span">
+          <RadioField
+            label="userType"
+            text={"Register as"}
+            register={register}
+            data={registerTypeData}
+            errors={errors}
+            rules={{ required: true }}
+          />
+        </div>
+      </div>
+      <Button
+        text="Register"
+        className="sign-up"
+        onClick={handleSubmit(registerUser)}
+      />
     </>
   );
 }
 
 RegistrationForm.propTypes = {
-  modalOpen: PropTypes.bool,
   handleModalOpen: PropTypes.func,
 };
 

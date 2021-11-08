@@ -17,30 +17,6 @@ h2 {
   font-weight: bold;
 }
 
-.login-container {
-  display: flex;
-}
-
-.login-container-image {
-  display: flex;
-  align-items: center;
-  width: 70%;
-  height: 100vh;
-}
-
-.login-container-form {
-  width: 30%;
-  display: flex;
-  align-items: center;
-  height: 100vh;
-  justify-content: flex-start;
-  > .login-form input,
-  button,
-  p {
-    margin-bottom: 14px;
-  }
-}
-
 .login-form {
   display: flex;
   flex-direction: column;
@@ -63,4 +39,86 @@ p {
   display: flex;
   width: 100%;
   margin-top: 18px;
+}
+
+.launch-container {
+  position: relative;
+  height: 100vh;
+  background: #fff;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+.launch-container .user {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.launch-container .user .img-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 70%;
+  height: 80 vh;
+  top: 15%;
+}
+.launch-container .user .img-container img {
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.launch-container .user .form-area {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  transition: 0.5s;
+}
+
+.launch-container .user .form-area form .signup {
+  position: relative;
+  margin-top: 20px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #1a73e8;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+.launch-container .signupContainer {
+  pointer-events: none;
+}
+.active .signupContainer {
+  pointer-events: initial;
+}
+
+.launch-container .signupContainer .form-area {
+  left: 100%;
+}
+.active .signupContainer .form-area {
+  left: 0;
+}
+.launch-container .signupContainer .img-container {
+  left: -100%;
+}
+.active .signupContainer .img-container {
+  left: 0;
+}
+
+.launch-container .signin-container .form-area {
+  left: 0;
+}
+.active .signin-container .form-area {
+  left: 100%;
+}
+.launch-container .signin-container .img-container {
+  left: 0;
+}
+.active .signin-container .img-container {
+  left: -100%;
 }

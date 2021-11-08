@@ -1,11 +1,6 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import PropTypes from "prop-types";
 import "./input.scss";
-
 function InputField({
   label,
   register,
@@ -14,57 +9,29 @@ function InputField({
   errors,
   name,
   type,
-  screen,
+  id,
 }) {
-  if (screen === "login") {
-    return (
+  return (
+    <>
+      {name && name !== "" ? <h3 className="input-label">{name}</h3> : null}
       <>
-        {name && name !== "" ? <h3 className="input-label">{name}</h3> : null}
-        <>
-          <input
-            type={type}
-            className="login-error"
-            placeholder={placeholder}
-            {...register(label, { ...rules })}
-            autoFocus
-          />
-        </>
-        {errors[label] && errors[label].type === "required" && (
-          <span className="login-alert">This field is required</span>
-        )}
+        <input
+          id={id}
+          type={type}
+          className="login-error"
+          placeholder={placeholder}
+          {...register(label, { ...rules })}
+        />
       </>
-    );
-  } else {
-    return (
-      <>
-        {name && name !== "" ? <h3 className="input-label">{name}</h3> : null}
-        {errors[label] && errors[label].type === "required" ? (
-          <>
-            <input
-              type={type}
-              className="input-error"
-              placeholder={placeholder}
-              {...register(label, { ...rules })}
-              autoFocus
-            />
-            <FontAwesomeIcon
-              icon={faExclamationCircle}
-              color="#606771"
-              className="err-icon"
-            />
-          </>
-        ) : (
-          <input
-            type={type}
-            className="input-area"
-            placeholder={placeholder}
-            {...register(label, { ...rules })}
-            autoFocus
-          />
-        )}
-      </>
-    );
-  }
+      {errors[label] && (
+        <span className="login-alert">
+          {errors[label].message === ""
+            ? "Phone number should have 10 digits"
+            : errors[label].message}
+        </span>
+      )}
+    </>
+  );
 }
 
 InputField.propTypes = {
@@ -72,7 +39,10 @@ InputField.propTypes = {
   placeholder: PropTypes.string,
   name: PropTypes.string,
   type: PropTypes.string,
-  screen: PropTypes.string,
+  rules: PropTypes.object,
+  register: PropTypes.func,
+  errors: PropTypes.object,
+  id: PropTypes.string,
 };
 
 export default InputField;

@@ -1,90 +1,50 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import * as action from "./data/book-hall-action";
+import Calendar from "react-calendar";
 import PropTypes from "prop-types";
+import dayjs from "dayjs";
+import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 import InputField from "../../common/input/input";
 import RadioField from "../../common/radio/radio";
-import SelectField from "../../common/dropdown/dropdown";
 import SearchBar from "../../common/searchbar/searchbar";
 import Button from "../../common/button/button";
+import authProvider from "../../common/utils";
+import { sortbyData, hallType } from "../../constants";
+import * as action from "./data/book-hall-action";
 import "./book-hall.scss";
 
 function BookHallScreen() {
   const dispatch = useDispatch();
   const [showToggle, setShowToogle] = useState(false);
-  const data = useSelector((state) => state.bookHallReducer.data);
-  const defaultValues = {
-    Sortby: "lowtohigh",
-  };
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [showModalItem, setShowModalItem] = useState({});
+  const [userDetails] = useState(authProvider());
+  let data = useSelector((state) => state.bookHallReducer.data);
+  const [hallData, setHallData] = useState(data && data);
+  const [disabledDates, setDisabledDates] = useState([]);
+
   const {
     handleSubmit,
     formState: { errors },
     register,
     control,
-  } = useForm(defaultValues);
+    reset,
+  } = useForm();
   const handleToggleFilter = () =>
     setShowToogle((previousSate) => !previousSate);
+  const showBookCalendar = () => {
+    setShowCalendar((previousSate) => !previousSate);
+  };
+  const [value, setValue] = useState(new Date());
+  const history = useHistory();
 
-  const sortbyData = [
-    {
-      id: 1,
-      name: "sorting",
-      title: "Low to High",
-      value: "lowtohigh",
-      checked: true,
-    },
-    {
-      id: 2,
-      name: "sorting",
-      title: "High to Low",
-      value: "hightolow",
-      checked: false,
-    },
-  ];
-
-  const hallType = [
-    {
-      id: 3,
-      name: "halltype",
-      title: "AC",
-      value: "ac",
-      checked: true,
-    },
-    {
-      id: 4,
-      name: "halltype",
-      title: "Non AC",
-      value: "nonac",
-      checked: false,
-    },
-  ];
-
-  const eventType = [
-    {
-      id: 1,
-      title: "Birthday",
-      value: "birthday",
-    },
-    {
-      id: 2,
-      title: "Conference",
-      value: "conference",
-    },
-    {
-      id: 3,
-      title: "Marriage",
-      value: "marriage",
-    },
-    {
-      id: 4,
-      title: "Custom",
-      value: "custom",
-    },
-  ];
+  const onChange = (nextValue) => {
+    setValue(nextValue);
+  };
 
   const HallList = ({ item }) => {
-    console.log(item, "hall item");
     return (
       <>
         <tr>
@@ -93,12 +53,11 @@ function BookHallScreen() {
           <td style={{ textTransform: "uppercase" }}>{item.halltype}</td>
           <td>{item.capacity}</td>
           <td>&#x20B9;{item.hallPrice}</td>
-          <td>{item.status}</td>
           <td>
             <Button
               text="BOOK NOW"
-              class="book-hall-btn"
-              onClick={() => console.log("clicked")}
+              className="book-hall-btn"
+              onClick={() => getBookedDateData(item)}
             />
           </td>
         </tr>
@@ -106,63 +65,116 @@ function BookHallScreen() {
     );
   };
 
-  const searchHallName = () => {
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("searchInput");
-    filter = input.value.toUpperCase();
-    table = document.getElementById("hallTable");
-    tr = table.getElementsByTagName("tr");
-    for (i = 0; i < tr.length; i++) {
-      td = tr[i].getElementsByTagName("td")[0];
-      if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          tr[i].style.display = "";
-        } else {
-          tr[i].style.display = "none";
-        }
-      }
+  const searchHallName = (value) => {
+    if (value !== "") {
+      const searchTerm = value.toLowerCase();
+      var myData = data.filter((value) => {
+        return value.hallName.toLowerCase().match(new RegExp(searchTerm, "g"));
+      });
+      setHallData(myData);
+    } else {
+      setHallData(data);
     }
   };
 
   const showFilteredData = (data) => {
-    let sortby = "";
-    let halltype = "";
-    if (data.hallType !== null) halltype = data.hallType;
-    if (data.sortby !== null) sortby = data.sortby;
     const params = {
       hallCategory: data.eventType,
-      sortby: sortby,
-      hallType: halltype,
+      sortby: data.sortby,
+      hallType: data.hallType,
       capacity: data.capacity,
     };
     dispatch(action.getHallListFilteredData(params));
   };
 
+  const clearSelectedFilter = () => {
+    reset({
+      hallCategory: "",
+      sortby: "",
+      hallType: "",
+      capacity: "",
+    });
+    dispatch(action.getHallListData());
+  };
+
+  const successCallback = () => {
+    toast.success("Hall booked successfully", { autoClose: 2000 });
+    history.push("/booking-status");
+  };
+
+  const confirmHallBook = () => {
+    const params = {
+      userID: userDetails._id,
+      userName: userDetails.firstName,
+      hallID: showModalItem._id,
+      hallStatus: "Selected",
+      bookDate: value,
+    };
+    dispatch(action.saveHallBooking(params, successCallback));
+  };
+
+  const getBookedDateData = (item) => {
+    const params = {
+      _id: item._id,
+    };
+    setShowModalItem(item);
+    dispatch(action.getBookedDates(params, calendarCallback));
+  };
+
+  // Check if a date React-Calendar wants to check is on the list of disabled dates
+  const calendarCallback = (response) => {
+    const dates = response
+      .filter((filter) => {
+        if (filter.bookings.hallStatus === "Booked") return filter;
+      })
+      .map((item) => {
+        return item.bookings.bookDate;
+      });
+    setDisabledDates(dates);
+    setShowCalendar((previousSate) => !previousSate);
+  };
+
+  function tileDisabled({ date, view }) {
+    if (view === "month") {
+      return disabledDates.find((dDate) => dayjs(dDate).isSame(dayjs(date)));
+    }
+  }
+
   useEffect(() => {
     dispatch(action.getHallListData());
-  }, []);
+  }, [reset]);
+
+  useEffect(() => {
+    data && setHallData(data);
+  }, [data]);
 
   return (
-    <>
+    <div className="book-hall-container">
       <div className="search-box">
         <SearchBar searchHallName={searchHallName} />
-        <button className="filter-button" onClick={handleToggleFilter}>
-          ADVANCE FILTER
-        </button>
+        <Button
+          text="ADVANCE FILTER"
+          className="filter-button"
+          onClick={handleToggleFilter}
+        />
       </div>
-      {showToggle === true ? (
+      {showToggle ? (
         <div className="advance-filter-container">
           <div className="advance-filter-row">
             <div className="col-20 col-span">
-              <SelectField
+              <h3>Hall Category *</h3>
+              <select
+                id="hallCategory"
                 label="eventType"
-                text="Event Type"
-                register={register}
-                data={eventType}
-                errors={errors}
-                rules={{ required: false }}
-              />
+                className="input-area"
+                {...register("eventType")}
+              >
+                <option value="">Any</option>
+                <option value="birthday">Birthday</option>
+                <option value="conference">Conference</option>
+                <option value="marriage">Marriage</option>
+                <option value="custom">Custom</option>
+              </select>
             </div>
             <div className="radio-container col-30 col-span">
               <RadioField
@@ -199,29 +211,33 @@ function BookHallScreen() {
           </div>
           <div className="form-submit-btn">
             <Button
+              text="RESET"
+              className="btn-clear-filter"
+              onClick={clearSelectedFilter}
+            />
+            <Button
               text="SUBMIT"
-              class="book-hall"
+              className="book-hall"
               onClick={handleSubmit(showFilteredData)}
             />
           </div>
         </div>
       ) : null}
 
-      <table id="hallTable">
-        <thead>
+      <table className="book-hall-table">
+        <thead className="book-hall-thead">
           <tr>
             <th>Hall Name</th>
             <th>Category</th>
             <th>Type</th>
             <th>Capacity</th>
             <th>Price</th>
-            <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
-          {data && data.length > 0 ? (
-            data.map((item) => {
+        <tbody className="book-hall-tbody">
+          {hallData && hallData.length > 0 ? (
+            hallData.map((item) => {
               return <HallList key={item._id} item={item} />;
             })
           ) : (
@@ -233,7 +249,37 @@ function BookHallScreen() {
           )}
         </tbody>
       </table>
-    </>
+      {showCalendar ? (
+        <>
+          <div className="book-modal-window">
+            <div className="book-modal-content">
+              <div className="form-header">
+                <h5>{showModalItem.hallName}</h5>
+              </div>
+              <Calendar
+                onChange={onChange}
+                value={value}
+                minDate={dayjs().toDate()}
+                tileDisabled={tileDisabled}
+              />
+              <div className="book-hall-footer">
+                <Button
+                  text="Cancel"
+                  className="book-now-close"
+                  onClick={showBookCalendar}
+                />
+                <Button
+                  text="Confirm Booking"
+                  className="book-now-confirm"
+                  onClick={confirmHallBook}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="overlay-bg" />
+        </>
+      ) : null}
+    </div>
   );
 }
 

@@ -2,16 +2,19 @@ import { put, call, takeLatest } from "redux-saga/effects";
 import {
   fetchHallListData,
   fetchHallListFilteredData,
+  fetchSaveHallBookData,
+  fetchBookedData,
 } from "../../../api/hall-api";
 
 function* fetchHallList(action) {
   try {
     const response = yield call(fetchHallListData, action);
-    console.log(response);
-    yield put({
-      type: "GET_HALL_DATA_SUCESS",
-      payload: response,
-    });
+    if (response.Status) {
+      yield put({
+        type: "GET_HALL_DATA_SUCESS",
+        payload: response.Data,
+      });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -19,13 +22,33 @@ function* fetchHallList(action) {
 
 function* fetchHallFilteredList(action) {
   try {
-    console.log(action, "book actiona");
     const response = yield call(fetchHallListFilteredData, action);
-    console.log(response, "book response");
-    yield put({
-      type: "GET_HALL_DATA_SUCESS",
-      payload: response,
-    });
+    if (response.Status) {
+      yield put({
+        type: "GET_HALL_DATA_SUCESS",
+        payload: response.Data,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* fetchSaveHallBooking(action) {
+  try {
+    const response = yield call(fetchSaveHallBookData, action);
+    if (response.Status) {
+      action.successCallback();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function* fetchBookedDates(action) {
+  try {
+    const response = yield call(fetchBookedData, action);
+    if (response.Status) action.calendarCallback(response.Data);
   } catch (error) {
     console.log(error);
   }
@@ -34,6 +57,8 @@ function* fetchHallFilteredList(action) {
 function* actionWatcherHallBook() {
   yield takeLatest("GET_HALL_LIST_DATA", fetchHallList);
   yield takeLatest("GET_HALL_LIST_FILTERED_DATA", fetchHallFilteredList);
+  yield takeLatest("SAVE_HALL_BOOKING", fetchSaveHallBooking);
+  yield takeLatest("GET_BOOKED_DATES", fetchBookedDates);
 }
 
 export default actionWatcherHallBook;

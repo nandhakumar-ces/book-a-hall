@@ -1,13 +1,19 @@
-/* eslint-disable react/prop-types */
 import React from "react";
 import "./button.scss";
+import PropTypes from "prop-types";
 
-function Button(props) {
+function Button({ text, className, onClick }) {
   return (
-    <button className={props.class} type="submit" onClick={props.onClick}>
-      {props.text}
+    <button className={className} type="submit" onClick={onClick}>
+      {text}
     </button>
   );
 }
+
+Button.propTypes = {
+  text: PropTypes.string,
+  className: PropTypes.string,
+  onClick: PropTypes.func,
+};
 
 export default Button;

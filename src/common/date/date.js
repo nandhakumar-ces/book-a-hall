@@ -1,8 +1,7 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./date.scss";
 
-function useDate(title, required, control, errors, type, placeholder, setAge) {
+function useDate(title, type, placeholder, setAge, defaultValue) {
   const [inputText, setInputtext] = useState("");
   const handleChange = (event) => {
     const today = new Date();
@@ -11,6 +10,9 @@ function useDate(title, required, control, errors, type, placeholder, setAge) {
     setInputtext(event.target.value);
     setAge(age);
   };
+  useEffect(() => {
+    if (defaultValue) setInputtext(defaultValue);
+  }, []);
   return [
     <>
       <h3 className="date-label">{title}</h3>

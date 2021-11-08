@@ -1,5 +1,27 @@
-/* eslint-disable no-unused-vars */
 import mongoose from "mongoose";
+
+const HallBookingSchema = mongoose.Schema({
+  userID: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  userName: String,
+  bookDate: {
+    type: Date,
+    default: new Date(),
+  },
+  createdDate: {
+    type: Date,
+    default: new Date(),
+  },
+  hallStatus: {
+    type: String,
+    enum: ["Available", "Selected", "Booked"],
+    default: "Available",
+  },
+  approvalStatus: {
+    type: String,
+    enum: ["Pending", "Approved", "Rejected"],
+    default: "Pending",
+  },
+});
 
 const HallSchema = mongoose.Schema({
   hallName: String,
@@ -8,34 +30,13 @@ const HallSchema = mongoose.Schema({
   capacity: Number,
   hallCategory: String,
   customCategory: String,
-  // hallOwner: String,
   hallOwner: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-  status: {
-    type: String,
-    enum: ["Available", "Selected", "Booked"],
-    default: "Available",
-  },
+  bookings: [HallBookingSchema],
   createdAt: {
     type: Date,
     default: new Date(),
   },
 });
 
-const HallBookingSchema = mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-  hallID: [{ type: mongoose.Schema.Types.ObjectId, ref: "Hall" }],
-  requestedDate: {
-    type: Date,
-    default: new Date(),
-  },
-  status: {
-    type: String,
-    enum: ["Approved", "Rejected"],
-    default: "Approved",
-  },
-});
-
-const Hall = mongoose.model("Hall", HallSchema);
-const HallBooking = mongoose.model("Booking", HallBookingSchema);
-
-export default Hall;
+export const Hall = mongoose.model("Hall", HallSchema);
+export const HallBooking = mongoose.model("Booking", HallBookingSchema);

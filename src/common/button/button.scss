@@ -20,13 +20,13 @@ button {
   border: 1px solid #00a400;
 }
 .book-hall {
-  width: 25%;
+  width: 15%;
   padding: 10px;
-  background-color: #3a66c9;
+  background-color: #00a400;
   color: #fff;
   border-radius: 8px;
   margin-top: 25px;
-  border: 1px solid #3a66c9;
+  border: 1px solid #00a400;
 }
 .register-hall {
   width: 25%;
@@ -36,4 +36,12 @@ button {
   border-radius: 8px;
   margin-top: 25px;
   border: 1px solid #3a66c9;
+}
+
+.book-hall-btn {
+  padding: 5px;
+  background-color: #00a400;
+  color: #fff;
+  border-radius: 8px;
+  border: 1px solid #00a400;
 }

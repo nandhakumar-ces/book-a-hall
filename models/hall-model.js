@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import mongoose from "mongoose";
 
 const HallSchema = mongoose.Schema({
@@ -7,9 +8,11 @@ const HallSchema = mongoose.Schema({
   capacity: Number,
   hallCategory: String,
   customCategory: String,
-  hallOwner: String,
+  // hallOwner: String,
+  hallOwner: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
   status: {
     type: String,
+    enum: ["Available", "Selected", "Booked"],
     default: "Available",
   },
   createdAt: {
@@ -18,6 +21,21 @@ const HallSchema = mongoose.Schema({
   },
 });
 
+const HallBookingSchema = mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  hallID: [{ type: mongoose.Schema.Types.ObjectId, ref: "Hall" }],
+  requestedDate: {
+    type: Date,
+    default: new Date(),
+  },
+  status: {
+    type: String,
+    enum: ["Approved", "Rejected"],
+    default: "Approved",
+  },
+});
+
 const Hall = mongoose.model("Hall", HallSchema);
+const HallBooking = mongoose.model("Booking", HallBookingSchema);
 
 export default Hall;

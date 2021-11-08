@@ -23,9 +23,10 @@ function DashboardScreen() {
   };
 
   useEffect(() => {
-    const hallOwner = sessionStorage.getItem("mobileNumber");
+    const ownerID = sessionStorage.getItem("userID");
+    console.log(ownerID, "owner id");
     const params = {
-      hallOwner: hallOwner,
+      hallOwner: ownerID,
     };
     dispatch(action.getDashboardData(params));
   }, []);

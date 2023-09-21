@@ -20,7 +20,7 @@ button {
   border: 1px solid #00a400;
 }
 .book-hall {
-  width: 15%;
+  width: 10%;
   padding: 10px;
   background-color: #00a400;
   color: #fff;
@@ -44,4 +44,52 @@ button {
   color: #fff;
   border-radius: 8px;
   border: 1px solid #00a400;
+}
+
+.book-now-confirm {
+  padding: 10px;
+  background-color: #00a400;
+  color: #fff;
+  border-radius: 8px;
+  border: 1px solid #00a400;
+}
+
+.book-now-close {
+  padding: 10px;
+  background-color: #fff;
+  color: #333;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.form-submit-btn {
+  margin: 0px 35px 10px;
+}
+
+.filter-button {
+  margin-right: 3%;
+  color: #fff;
+  background-color: #339af0;
+  border: 1px solid;
+  border-radius: 5px;
+}
+
+.btn-clear-filter {
+  width: 10%;
+  padding: 10px;
+  background-color: #fff;
+  color: #333;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.back-btn {
+  padding: 5px 18px;
+  background-color: #ffc727;
+  color: #fff;
+  border: 1px solid #ffc727;
+  font-size: 18px;
+  border-radius: 5px;
 }

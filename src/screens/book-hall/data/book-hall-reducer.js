@@ -4,6 +4,10 @@ const bookHallReducer = (state = {}, action) => {
       return { ...state, loading: true };
     case "GET_HALL_LIST_FILTERED_DATA":
       return { ...state, loading: true };
+    case "SAVE_HALL_BOOKING":
+      return { ...state, loading: true };
+    case "GET_BOOKED_DATES":
+      return { ...state, loading: true };
     case "GET_HALL_DATA_SUCESS":
       return { ...state, loading: true, data: action.payload };
     default:

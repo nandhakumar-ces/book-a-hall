@@ -12,7 +12,7 @@ function SearchBar({ searchHallName }) {
           id="searchInput"
           className="search-input"
           placeholder="Search Hall Name.."
-          onKeyUp={searchHallName}
+          onKeyUp={(e) => searchHallName(e.target.value)}
         />
         <button className="search-button">
           <FontAwesomeIcon icon={faSearch} color="#606771" />

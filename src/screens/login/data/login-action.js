@@ -1,5 +1,5 @@
-export const fetchLogin = (data, history) => {
-  return { type: "FETCH_LOGIN", payload: data, history };
+export const fetchLogin = (data) => {
+  return { type: "FETCH_LOGIN", payload: data };
 };
 
 export const requestLogin = () => {
@@ -7,9 +7,13 @@ export const requestLogin = () => {
 };
 
 export const loginSucess = (data) => {
-  return { type: "LOGIN_SUCESSS", isDone: data };
+  return { type: "LOGIN_SUCESSS", response: data };
 };
 
 export const loginDataFailure = () => {
   return { type: "LOGIN_FAILURE" };
+};
+
+export const requestLogOut = () => {
+  return { type: "REQUEST_LOGOUT" };
 };

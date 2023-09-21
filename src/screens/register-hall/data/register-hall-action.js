@@ -1,13 +1,13 @@
-export const fetchRegistration = (data, history) => {
-  return { type: "FETCH_HALL_REGISTRATION", payload: data, history };
+export const fetchRegistration = (data) => {
+  return { type: "FETCH_HALL_REGISTRATION", payload: data };
 };
 
 export const requestRegistration = () => {
   return { type: "REQUESTED_HALL_REGISTRATION" };
 };
 
-export const registrationSucess = (data) => {
-  return { type: "REGISTRATION_HALL_SUCESSS", isDone: data };
+export const registrationSucess = () => {
+  return { type: "REGISTRATION_HALL_SUCESSS" };
 };
 
 export const registrationDataFailure = () => {

@@ -1,6 +1,4 @@
 export const fetchPost = async (url, body) => {
-  console.log(url, "url");
-  console.log(body, "body");
   try {
     const response = await (
       await fetch(url, {
@@ -17,10 +15,7 @@ export const fetchPost = async (url, body) => {
   }
 };
 
-export const fetchGet = async (url, params) => {
-  console.log(url);
-  console.log(params);
-
+export const fetchGet = async (url) => {
   try {
     const response = await (await fetch(url)).json();
     return response;

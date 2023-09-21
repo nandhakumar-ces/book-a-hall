@@ -1,0 +1,66 @@
+$primary: #2b9348;
+$yellow: #f9c80e;
+$orange: #f86624;
+$red: #ea3546;
+$default: #d1d5da;
+
+.badge {
+  display: inline-block;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  &.badge-default {
+    background-color: lighten($default, 10%);
+    color: darken($default, 50%);
+    border-color: darken($default, 50%);
+  }
+  &.badge-primary {
+    background-color: lighten($primary, 50%);
+    color: $primary;
+    border-color: $primary;
+  }
+  &.badge-yellow {
+    background-color: lighten($yellow, 40%);
+    color: darken($yellow, 5%);
+    border-color: darken($yellow, 5%);
+  }
+  &.badge-orange {
+    background-color: lighten($orange, 40%);
+    color: $orange;
+    border-color: $orange;
+  }
+  &.badge-red {
+    background-color: lighten($red, 40%);
+    color: $red;
+    border-color: $red;
+  }
+}
+
+.list-hall-name {
+  text-transform: capitalize;
+  font-weight: bold;
+  flex-basis: 30%;
+}
+
+.list-user-name {
+  flex-basis: 20%;
+  display: flex;
+  align-items: center;
+  text-transform: capitalize;
+}
+
+.list-hall-date {
+  flex-basis: 20%;
+}
+
+.list-hall-status {
+  flex-basis: 20%;
+}
+
+.list-hall-approval {
+  flex-basis: 10%;
+  display: flex;
+  justify-content: space-between;
+}
